@@ -1,5 +1,6 @@
 using LibraryManagement.Data;
-using LibraryManagement.services;
+using LibraryManagement.Repository;
+using LibraryManagement.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +18,9 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddSingleton<BookService>();
+builder.Services.AddScoped<BookService>();
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+
 builder.Services.AddControllers();
 
 // Add Swagger

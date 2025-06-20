@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using LibraryManagement.Models;
-using LibraryManagement.services;
+using LibraryManagement.Services;
 
 namespace LibraryManagement.Controllers
 {
@@ -17,16 +17,18 @@ namespace LibraryManagement.Controllers
         
         // GET: api/books
         [HttpGet]
-        public ActionResult<IEnumerable<Book>> GetBooks()
+        public async Task<OkObjectResult> GetBooks()
         {
-            return Ok(_bookService.GetBooks());
+            Console.WriteLine("Inside controller GetBooks()");
+            
+            return Ok(await _bookService.GetBooks());
         }
         
         // POST: api/books
         [HttpPost]
-        public ActionResult<string> AddBook([FromBody] Book newBook)
+        public async Task<ActionResult<string>> AddBook([FromBody] Book newBook)
         {
-            if (!_bookService.AddBook(newBook))
+            if (!await _bookService.AddBook(newBook))
             {
                 return Conflict($"A book with ID {newBook.Id} already exists.");
             }
@@ -35,9 +37,9 @@ namespace LibraryManagement.Controllers
         
         // DELETE: api/books/{id}
         [HttpDelete("{id}")]
-        public ActionResult DeleteBook(int id)
+        public async Task<ActionResult> DeleteBook(int id)
         {
-            if (!_bookService.DeleteBook(id))
+            if (!await _bookService.DeleteBook(id))
             {
                 return NotFound($"Book with ID {id} not found.");
             }

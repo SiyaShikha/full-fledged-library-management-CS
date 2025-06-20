@@ -1,45 +1,42 @@
 using LibraryManagement.Models;
+using LibraryManagement.Repository;
 
-namespace LibraryManagement.services;
+namespace LibraryManagement.Services;
+
 public class BookService
 {
-    // In-memory list of books (replace with database later)
-    private static List<Book> books =
-    [
-        new Book { Id = 1, Title = "1984", Author = "George Orwell", Genre = "Dystopian", Year = 1949 },
-        new Book { Id = 2, Title = "To Kill a Mockingbird", Author = "Harper Lee", Genre = "Fiction", Year = 1960 }
-    ];
-    public bool AddBook(Book newBook)
+    private readonly IBookRepository _repository;
+
+    public BookService(IBookRepository repository)
     {
-        if (books.Any(b => b.Id == newBook.Id))
+        _repository = repository;
+    }
+
+    public async Task<List<Book>> GetBooks()
+    {
+        Console.WriteLine("Inside Service GetBooks()");
+        Console.WriteLine(await _repository.GetBooks());
+        return await _repository.GetBooks();
+    }
+
+    public async Task<Book?> GetBook(int id)
+    {
+        return await _repository.GetBook(id);
+    }
+
+    public async Task<bool> AddBook(Book newBook)
+    {
+        if (await _repository.BookExists(newBook.Id))
         {
             return false;
         }
-        newBook.Id = books.Max(b => b.Id) + 1;
-        books.Add(newBook);
+
+        await _repository.AddBook(newBook);
         return true;
     }
 
-    public bool DeleteBook(int id)
+    public async Task<bool> DeleteBook(int id)
     {
-        var book = books.FirstOrDefault(b => b.Id == id);
-        if (book == null)
-        {
-            return false;
-        }
-
-        books.Remove(book);
-        return true;
+        return await _repository.DeleteBook(id);
     }
-    
-    public List<Book> GetBooks()
-    {
-        return books;
-    }
-    
-    public Book? GetBook(int id)
-    {
-        return books.FirstOrDefault(b => b.Id == id);
-    }
-
 }

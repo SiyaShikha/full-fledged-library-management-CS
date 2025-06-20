@@ -39,8 +39,10 @@ const App = () => {
       try {
         const response = await fetch("http://localhost:5008/api/books");
         const data = await response.json();
+
         dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (error) {
+        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", error);
         dispatch({ type: "FETCH_FAILURE", payload: error.message });
       }
     };
