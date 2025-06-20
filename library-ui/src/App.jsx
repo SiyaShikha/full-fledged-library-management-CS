@@ -1,6 +1,7 @@
 import React, { useReducer, useEffect } from "react";
 import BookList from "./Components/BookList";
 import AddBook from "./Components/AddBook";
+import FindBook from "./Components/FindBook";
 
 const initialState = {
   books: [],
@@ -23,6 +24,11 @@ const reducer = (state, action) => {
         ...state,
         books: state.books.filter((book) => book.id !== action.payload),
       };
+    case "FIND_BOOK":
+      return {
+        ...state,
+        book: state.books.filter((book) => book.id === action.payload),
+      };
     default:
       throw new Error(`Unsupported action type: ${action.type}`);
   }
@@ -42,7 +48,6 @@ const App = () => {
 
         dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (error) {
-        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", error);
         dispatch({ type: "FETCH_FAILURE", payload: error.message });
       }
     };
@@ -54,6 +59,7 @@ const App = () => {
     <div>
       <h1>Library Management System</h1>
       <AddBook dispatch={dispatch} />
+      <FindBook dispatch={dispatch} />
       <BookList
         dispatch={dispatch}
         books={state.books}

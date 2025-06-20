@@ -49,9 +49,9 @@ namespace LibraryManagement.Controllers
 
         // GET: api/books/{id}
         [HttpGet("{id}")]
-        public ActionResult<Book> GetBook(int id)
+        public async Task<ActionResult<Book>> GetBook(int id)
         {
-            var book = _bookService.GetBook(id);
+            var book = await _bookService.GetBook(id);
             if (book == null)
             {
                 return NotFound($"Book with ID {id} not found.");
