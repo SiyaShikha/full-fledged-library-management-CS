@@ -41,4 +41,19 @@ public class BookRepositoryTests
         _testOutputHelper.WriteLine(books.ToString());
         Assert.Equal(2, books.Count);
     }
+
+    [Fact]
+    public async Task GetBook_ReturnsBookWithId()
+    {
+        var repository = GetRepository();
+        await repository.AddBook(new Book { Id = 100, Title = "1984", Author = "George Orwell", Genre = "Dystopian" });
+        await repository.AddBook(new Book { Id = 200, Title = "To Kill a Mockingbird", Author = "Harper Lee", Genre = "Fiction" });
+        
+        var book = await repository.GetBook(100);
+        
+        Assert.Equal(100, book.Id);
+        Assert.Equal("1984", book.Title);
+        Assert.Equal("George Orwell", book.Author);
+        Assert.Equal("Dystopian", book.Genre);
+    }
 }
