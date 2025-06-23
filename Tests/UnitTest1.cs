@@ -71,6 +71,6 @@ public class BookRepositoryTests
         var books = await repository.GetBooks();
         
         Assert.True(isDeleted);
-        Assert.Equal(3, books.Count);
+        Assert.Equal(2, books.Count);
     }
 }
