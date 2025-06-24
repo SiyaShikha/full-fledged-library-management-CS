@@ -17,7 +17,7 @@ const FindBook = ({ dispatch }) => {
       setBook(await response.json());
       dispatch({ type: "FIND_BOOK", payload: bookId });
     } catch (err) {
-      setError("An error occurred while fetching the book.");
+      setError("Couldn't find a book.");
       setBook(null);
     }
   };

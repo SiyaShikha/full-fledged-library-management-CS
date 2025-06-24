@@ -18,10 +18,10 @@ const BookList = ({ dispatch, books, loading, error }) => {
   return (
     <div>
       <h2>Book List</h2>
-      <ul>
+      <ul style={{ listStyleType: "none", padding: 0 }}>
         {books.map((book) => (
           <li key={book.id}>
-            {book.title} by {book.author} ({book.year})
+            {book.id}: {book.title} by {book.author} ({book.year})
             <button onClick={() => handleDelete(book.id)}>Delete</button>
           </li>
         ))}
