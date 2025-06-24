@@ -28,6 +28,17 @@ public class BookRepositoryTests
         
         return new BookRepository(context);
     }
+    
+    [Fact]
+    public async Task AddBook_ReturnsTrue()
+    {
+        var repository = GetRepository();
+        var isAdded = await repository.AddBook(new Book { Id = 1, Title = "1984", Author = "George Orwell", Genre = "Dystopian" });
+        var books = await repository.GetBooks();
+        
+        Assert.True(isAdded);
+        Assert.Single(books);
+    }
 
     [Fact]
     public async Task GetBooks_ReturnsAllBooks()
@@ -72,5 +83,19 @@ public class BookRepositoryTests
         
         Assert.True(isDeleted);
         Assert.Equal(2, books.Count);
+    }
+
+    [Fact]
+    public async Task BookExists_ReturnsTrue()
+    {
+        var repository = GetRepository();
+        await repository.AddBook(new Book { Id = 1, Title = "1984", Author = "George Orwell", Genre = "Dystopian" });
+        await repository.AddBook(new Book { Id = 2, Title = "Book2", Author = "Author2", Genre = "Genre2" });
+        
+        var exists = await repository.BookExists(1);
+        var notExist= await repository.BookExists(5);
+        
+        Assert.True(exists);
+        Assert.False(notExist);
     }
 }
