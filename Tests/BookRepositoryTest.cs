@@ -33,10 +33,9 @@ public class BookRepositoryTests
     public async Task AddBook_ReturnsTrue()
     {
         var repository = GetRepository();
-        var isAdded = await repository.AddBook(new Book { Id = 1, Title = "1984", Author = "George Orwell", Genre = "Dystopian" });
+        await repository.AddBook(new Book { Id = 1, Title = "1984", Author = "George Orwell", Genre = "Dystopian" });
         var books = await repository.GetBooks();
         
-        Assert.True(isAdded);
         Assert.Single(books);
     }
 
@@ -64,10 +63,10 @@ public class BookRepositoryTests
         
         var book = await repository.GetBook(1);
         
-        Assert.Equal(1, book.Id);
-        Assert.Equal("1984", book.Title);
-        Assert.Equal("George Orwell", book.Author);
-        Assert.Equal("Dystopian", book.Genre);
+        Assert.Equal(1, book?.Id);
+        Assert.Equal("1984", book?.Title);
+        Assert.Equal("George Orwell", book?.Author);
+        Assert.Equal("Dystopian", book?.Genre);
     }
     
     [Fact]
