@@ -19,8 +19,6 @@ namespace LibraryManagement.Controllers
         [HttpGet]
         public async Task<OkObjectResult> GetBooks()
         {
-            Console.WriteLine("Inside controller GetBooks()");
-            
             return Ok(await _bookService.GetBooks());
         }
         

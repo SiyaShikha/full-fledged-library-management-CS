@@ -15,8 +15,6 @@ public class BookRepository : IBookRepository
 
     public async Task<List<Book>> GetBooks()
     {
-        Console.WriteLine("Inside BookRepository.GetBooks()");
-        Console.WriteLine(await _context.Books.ToListAsync());
         return await _context.Books.ToListAsync();
     }
 
