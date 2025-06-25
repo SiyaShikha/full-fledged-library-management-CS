@@ -1,48 +1,61 @@
+using DotNetEnv;
 using LibraryManagement.Data;
 using LibraryManagement.Repository;
 using LibraryManagement.Services;
 using Microsoft.EntityFrameworkCore;
-using DotNetEnv;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace LibraryManagement;
 
-builder.Services.AddDbContext<LibraryContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("LibraryConnection")));
-
-builder.Services.AddCors(options =>
+public class Program
 {
-    options.AddPolicy("AllowReactApp", policy =>
+  public static void Main(string[] args)
+  { 
+    var builder = WebApplication.CreateBuilder(args);
+
+    ConfigureServices(builder);
+
+    Env.Load();
+
+    var app = builder.Build();
+
+    ConfigureMiddleware(app);
+
+    app.Run();
+  }
+
+  private static void ConfigureServices(WebApplicationBuilder builder)
+  {
+    builder.Services.AddDbContext<LibraryContext>(options =>
+      options.UseNpgsql(builder.Configuration.GetConnectionString("LibraryConnection")));
+
+    builder.Services.AddCors(options =>
     {
+      options.AddPolicy("AllowReactApp", policy =>
+      {
         policy.WithOrigins("*")
-            .AllowAnyHeader()
-            .AllowAnyMethod();
+          .AllowAnyHeader()
+          .AllowAnyMethod();
+      });
     });
-});
 
-builder.Services.AddScoped<BookService>();
-builder.Services.AddScoped<IBookRepository, BookRepository>();
+    builder.Services.AddScoped<BookService>();
+    builder.Services.AddScoped<IBookRepository, BookRepository>();
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+  }
 
-builder.Services.AddControllers();
+  private static void ConfigureMiddleware(WebApplication app)
+  {
+    app.UseCors("AllowReactApp");
 
-// Add Swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    if (app.Environment.IsDevelopment())
+    {
+      app.UseSwagger();
+      app.UseSwaggerUI();
+    }
 
-Env.Load();
-
-var app = builder.Build();
-
-app.UseCors("AllowReactApp");
-
-// Enable Swagger middleware
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseAuthorization();
+    app.MapControllers();
+  }
 }
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
